@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "VLC-like Video Player",
+    "version": "1.0",
+    "description": "A Chrome extension for playing videos with subtitles, MKV support, and customizable controls.",
+    "permissions": [
+        "storage"
+    ],
+    "action": {
+        "default_title": "Open Video Player"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    },
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}

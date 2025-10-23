@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <link rel="stylesheet" href="lib/video-js.min.css">
+    <link rel="stylesheet" href="player-styles.css">
+</head>
+
+<body>
+    <!-- Player Container -->
+    <div class="player-wrapper">
+        <!-- Video Element -->
+        <video id="video-player" class="video-js vjs-big-play-centered"></video>
+
+        <!-- Custom Subtitle Overlay -->
+        <div id="subtitle-display" class="subtitle-display"></div>
+
+    </div>
+    </div>
+
+    <!-- Unlock Button -->
+    <button class="unlock-btn hidden" id="unlock-btn" title="Unlock Controls">
+        <svg class="icon" viewBox="0 0 24 24">
+            <path fill="currentColor"
+                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm3 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
+        </svg>
+    </button>
+
+    <!-- Drop Zone -->
+    <div id="drop-zone" class="drop-zone">
+        <div class="drop-content">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" />
+                <path fill="currentColor" d="M8 15.01l1.41 1.41L11 14.84V18h2v-3.16l1.59 1.59L16 15.01 12.01 11z" />
+            </svg>
+            <h2>Drop video file here</h2>
+            <p>or click to browse</p>
+            <button class="browse-btn" id="browse-btn">Browse Files</button>
+            <div
+                style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 8px; max-width: 600px;">
+                <h3 style="margin-bottom: 10px;">💡 Quick Tips:</h3>
+                <p style="margin: 5px 0;"><strong>Subtitles:</strong> Click CC button (bottom-right) to load
+                    subtitle files</p>
+                <p style="margin: 5px 0;"><strong>Audio Tracks:</strong> Click ⚙️ Settings → Audio Track to switch
+                </p>
+                <p style="margin: 5px 0;"><strong>Controls:</strong> Move mouse over video to show/hide controls</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Controls Overlay -->
+    <div class="custom-controls" id="custom-controls">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="control-btn" id="open-file-btn" title="Open File">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                        d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" />
+                </svg>
+            </button>
+            <span class="video-title" id="video-title">No video loaded</span>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="bottom-controls">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress-filled" id="progress-filled"></div>
+                    <div class="progress-handle" id="progress-handle"></div>
+                </div>
+                <div class="time-display">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <div class="left-controls">
+                    <button class="control-btn" id="play-pause-btn" title="Play/Pause">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M8 5v14l11-7z" />
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="rewind-btn" title="Rewind 10s">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M12 5V1L7 6l5 5V7c3.3 0 6 2.7 6 6s-2.7 6-6 6-6-2.7-6-6H4c0 4.4 3.6 8 8 8s8-3.6 8-8-3.6-8-8-8z" />
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="forward-btn" title="Forward 10s">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" />
+                        </svg>
+                    </button>
+                    <div class="volume-container">
+                        <button class="control-btn" id="volume-btn" title="Mute/Unmute">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                            </svg>
+                        </button>
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="100">
+                    </div>
+                </div>
+
+                <div class="right-controls">
+                    <button class="control-btn" id="subtitle-btn" title="Subtitles">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 7H9.5v-.5h-2v3h2V12H11v1c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1V10c0-.55.45-1 1-1h3v1zm7 0h-1.5v-.5h-2v3h2V12H18v1c0 .55-.45 1-1 1h-3c-.55 0-1-.45-1-1V10c0-.55.45-1 1-1h3v1z" />
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="pip-btn" title="Picture-in-Picture">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="lock-btn" title="Hide Controls">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92 1.11-1.11L3.51 2.3 2.4 3.41l1.42 1.42C2.52 6.25 1.73 8.95 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42 1.11-1.11L12 7zM12 17c-2.76 0-5-2.24-5-5 0-.77.18-1.5.49-2.14l1.57 1.57c-.03.18-.06.37-.06.57 0 1.66 1.34 3 3 3 .2 0 .38-.03.57-.07L14.14 16.5c-.64.31-1.37.5-2.14.5zm2.07-7.75l-.98-.98c.16-.03.33-.07.48-.07 1.66 0 3 1.34 3 3 0 .15-.04.32-.07.48l-.98-.98c.15-.29.25-.63.25-.98 0-.55-.45-1-1-1-.35 0-.69.1-.98.25z" />
+                        </svg>
+                    </button>
+                    <button class="control-btn" id="fullscreen-btn" title="Fullscreen">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unlock Button -->
+    <button class="unlock-btn hidden" id="unlock-btn" title="Show Controls">
+        <svg class="icon" viewBox="0 0 24 24">
+            <path fill="currentColor"
+                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+        </svg>
+    </button> <!-- Speed Submenu -->
+    <div class="settings-menu hidden" id="speed-submenu">
+        <div class="submenu-header">
+            <button class="back-btn" id="speed-back-btn"><svg class="icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg></button>
+            <span>Playback Speed</span>
+        </div>
+        <div class="settings-section">
+            <div class="settings-item selectable" data-speed="0.25"><span>0.25x</span></div>
+            <div class="settings-item selectable" data-speed="0.5"><span>0.5x</span></div>
+            <div class="settings-item selectable" data-speed="0.75"><span>0.75x</span></div>
+            <div class="settings-item selectable selected" data-speed="1"><span>Normal</span></div>
+            <div class="settings-item selectable" data-speed="1.25"><span>1.25x</span></div>
+            <div class="settings-item selectable" data-speed="1.5"><span>1.5x</span></div>
+            <div class="settings-item selectable" data-speed="1.75"><span>1.75x</span></div>
+            <div class="settings-item selectable" data-speed="2"><span>2x</span></div>
+        </div>
+    </div>
+
+    <!-- Audio Track Submenu -->
+    <div class="settings-menu hidden" id="audio-submenu">
+        <div class="submenu-header">
+            <button class="back-btn" id="audio-back-btn"><svg class="icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg></button>
+            <span>Audio Track</span>
+        </div>
+        <div class="settings-section" id="audio-track-list">
+            <!-- Audio tracks will be populated dynamically -->
+        </div>
+    </div>
+
+    <!-- Subtitle Menu -->
+    <div class="settings-menu hidden" id="subtitle-menu">
+        <div class="submenu-header">
+            <span>Subtitles</span>
+        </div>
+        <div class="settings-section" id="subtitle-track-list">
+            <div class="settings-item selectable selected" data-track="off">
+                <span>Off</span>
+            </div>
+            <!-- Embedded subtitle tracks will be added here dynamically -->
+        </div>
+        <div class="settings-section">
+            <div class="settings-item" id="load-subtitle-item">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                <span>Load External Subtitle</span>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Unlock Button -->
+    <button class="unlock-btn hidden" id="unlock-btn" title="Show Controls">
+        <svg class="icon" viewBox="0 0 24 24">
+            <path fill="currentColor"
+                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+        </svg>
+    </button>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="video-file-input" accept="video/*,.mkv,.mp4,.webm,.avi" style="display: none;">
+    <input type="file" id="subtitle-file-input" accept=".srt,.vtt,.ass" style="display: none;">
+
+    <script src="lib/video.min.js"></script>
+    <script src="lib/subtitles-parser.min.js"></script>
+    <script src="player.js"></script>
+</body>
+
+</html>
